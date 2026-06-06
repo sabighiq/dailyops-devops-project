@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DailyOps</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">D</div>
+          <div>
+            <p class="brand-name">DailyOps</p>
+            <p class="brand-subtitle">Personal command center</p>
+          </div>
+        </div>
+        <nav class="nav">
+          <a class="nav-item active" href="#today">Today</a>
+          <a class="nav-item" href="#habits">Habits</a>
+          <a class="nav-item" href="#expenses">Expenses</a>
+          <a class="nav-item" href="#focus">Focus</a>
+        </nav>
+        <div class="system-card">
+          <span class="status-dot"></span>
+          <div>
+            <p>Service healthy</p>
+            <small>/health and /metrics ready</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="topbar">
+          <div>
+            <p class="eyebrow" id="currentDate">Today</p>
+            <h1>Plan the day. Track the basics. Stay steady.</h1>
+          </div>
+          <button class="primary-button" id="resetDay">Reset Day</button>
+        </section>
+
+        <section class="summary-grid" aria-label="Daily summary">
+          <article class="metric-card">
+            <span class="metric-label">Tasks Done</span>
+            <strong id="tasksDone">0/0</strong>
+            <p>Finish small, useful actions.</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Habit Score</span>
+            <strong id="habitScore">0%</strong>
+            <p>Keep health and routine visible.</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Water</span>
+            <strong id="waterCount">0/8</strong>
+            <p>Cups logged for the day.</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Spend</span>
+            <strong id="expenseTotal">₹0</strong>
+            <p>Quick daily expense snapshot.</p>
+          </article>
+        </section>
+
+        <section class="content-grid">
+          <article class="panel tasks-panel" id="today">
+            <div class="panel-header">
+              <div>
+                <h2>Today Tasks</h2>
+                <p>Capture work, errands, and personal tasks.</p>
+              </div>
+            </div>
+            <form class="task-form" id="taskForm">
+              <input id="taskInput" type="text" placeholder="Add a task for today" autocomplete="off" />
+              <button type="submit">Add</button>
+            </form>
+            <ul class="task-list" id="taskList"></ul>
+          </article>
+
+          <article class="panel" id="habits">
+            <div class="panel-header">
+              <div>
+                <h2>Habits</h2>
+                <p>Daily basics that compound quietly.</p>
+              </div>
+            </div>
+            <div class="habit-list" id="habitList"></div>
+          </article>
+
+          <article class="panel water-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Water</h2>
+                <p>Log up to eight cups.</p>
+              </div>
+              <button class="icon-button" id="addWater" aria-label="Add water">+</button>
+            </div>
+            <div class="water-cups" id="waterCups"></div>
+          </article>
+
+          <article class="panel" id="expenses">
+            <div class="panel-header">
+              <div>
+                <h2>Expenses</h2>
+                <p>Track small spends before they vanish.</p>
+              </div>
+            </div>
+            <form class="expense-form" id="expenseForm">
+              <input id="expenseName" type="text" placeholder="Item" autocomplete="off" />
+              <input id="expenseAmount" type="number" min="1" placeholder="₹" />
+              <button type="submit">Log</button>
+            </form>
+            <ul class="expense-list" id="expenseList"></ul>
+          </article>
+
+          <article class="panel focus-panel" id="focus">
+            <div class="panel-header">
+              <div>
+                <h2>Focus Timer</h2>
+                <p>25 minute focus sprint.</p>
+              </div>
+            </div>
+            <div class="timer" id="timer">25:00</div>
+            <div class="timer-actions">
+              <button id="startTimer">Start</button>
+              <button id="pauseTimer">Pause</button>
+              <button id="resetTimer">Reset</button>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
