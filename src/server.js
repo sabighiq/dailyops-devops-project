@@ -3,6 +3,7 @@ const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 3000;
+const version = process.env.APP_VERSION || "v2";
 const startedAt = new Date();
 
 app.use(express.json());
@@ -12,6 +13,7 @@ app.get("/health", (req, res) => {
   res.json({
     status: "ok",
     service: "dailyops",
+    version,
     uptimeSeconds: Math.round(process.uptime()),
     startedAt: startedAt.toISOString()
   });

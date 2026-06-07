@@ -20,8 +20,8 @@ spec:
     spec:
       containers:
         - name: dailyops
-          image: dailyops:latest
-          imagePullPolicy: IfNotPresent
+          image: iquyan/dailyops:v1
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           readinessProbe:

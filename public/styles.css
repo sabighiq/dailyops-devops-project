@@ -163,6 +163,20 @@ h1 {
   line-height: 1;
 }
 
+.release-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  margin-top: 14px;
+  padding: 0 10px;
+  border: 1px solid rgba(217, 95, 69, 0.35);
+  border-radius: 8px;
+  color: #9e3f2d;
+  background: rgba(217, 95, 69, 0.1);
+  font-size: 0.85rem;
+  font-weight: 900;
+}
+
 h2 {
   font-size: 1.1rem;
 }

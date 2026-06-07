@@ -1,9 +1,9 @@
 replicaCount: 2
 
 image:
-  repository: dailyops
-  tag: latest
-  pullPolicy: IfNotPresent
+  repository: iquyan/dailyops
+  tag: v1
+  pullPolicy: Always
 
 service:
   type: ClusterIP
