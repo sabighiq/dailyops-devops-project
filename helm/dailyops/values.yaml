@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: iquyan/dailyops
-  tag: v1
+  tag: v2
   pullPolicy: Always
 
 service:
@@ -16,3 +16,9 @@ resources:
   limits:
     cpu: 300m
     memory: 256Mi
+
+serviceMonitor:
+  enabled: true
+  releaseLabel: monitoring
+  path: /metrics
+  interval: 30s
