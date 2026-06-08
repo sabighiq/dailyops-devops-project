@@ -35,7 +35,7 @@ pipeline {
     stage('Push Docker Image') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          powershell '$env:DOCKER_PASS | docker login -u $env:DOCKER_USER --password-stdin'
+          powershell '[Console]::Out.Write($env:DOCKER_PASS) | docker login -u $env:DOCKER_USER --password-stdin'
           bat 'docker push %DOCKER_IMAGE%:%IMAGE_TAG%'
         }
       }
