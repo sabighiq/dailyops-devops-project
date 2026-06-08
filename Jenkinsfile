@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     APP_NAME = 'dailyops'
-    DOCKER_IMAGE = 'your-dockerhub-username/dailyops'
+    DOCKER_IMAGE = 'iquyan/dailyops'
     IMAGE_TAG = "${BUILD_NUMBER}"
   }
 
@@ -16,34 +16,34 @@ pipeline {
 
     stage('Install Dependencies') {
       steps {
-        sh 'npm ci'
+        bat 'npm ci'
       }
     }
 
     stage('Run Tests') {
       steps {
-        sh 'npm test'
+        bat 'npm test'
       }
     }
 
     stage('Build Docker Image') {
       steps {
-        sh 'docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} .'
+        bat 'docker build -t %DOCKER_IMAGE%:%IMAGE_TAG% .'
       }
     }
 
     stage('Push Docker Image') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-          sh 'docker push ${DOCKER_IMAGE}:${IMAGE_TAG}'
+          bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+          bat 'docker push %DOCKER_IMAGE%:%IMAGE_TAG%'
         }
       }
     }
 
     stage('Deploy to Kubernetes') {
       steps {
-        sh 'helm upgrade --install dailyops ./helm/dailyops --set image.repository=${DOCKER_IMAGE} --set image.tag=${IMAGE_TAG}'
+        bat 'helm upgrade --install dailyops ./helm/dailyops --set image.repository=%DOCKER_IMAGE% --set image.tag=%IMAGE_TAG%'
       }
     }
   }
