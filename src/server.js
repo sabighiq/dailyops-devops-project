@@ -3,7 +3,7 @@ const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 3000;
-const version = process.env.APP_VERSION || "v2";
+const version = process.env.APP_VERSION || "v3";
 const startedAt = new Date();
 
 app.use(express.json());
