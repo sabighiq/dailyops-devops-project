@@ -5,6 +5,7 @@ pipeline {
     APP_NAME = 'dailyops'
     DOCKER_IMAGE = 'iquyan/dailyops'
     IMAGE_TAG = "${BUILD_NUMBER}"
+    KUBECONFIG = 'C:\\Users\\iquya\\.kube\\config'
   }
 
   stages {
