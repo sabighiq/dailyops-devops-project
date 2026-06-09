@@ -1,13 +1,37 @@
-# Terraform Stage
+# DailyOps Azure Infrastructure
 
-This folder is reserved for the cloud phase of the project.
+This folder provisions the Azure infrastructure for DailyOps using Terraform.
 
-Recommended learning order:
+## Phase 1
 
-1. Run DailyOps locally.
-2. Containerize it with Docker.
-3. Deploy it to Minikube with Helm.
-4. Add Prometheus and Grafana.
-5. Use Terraform to provision AWS ECR and EKS.
+- Azure Resource Group
+- Azure Container Registry using the Basic SKU
 
-The Terraform files will be added when you start the AWS/EKS phase, because those values depend on your AWS region, account, networking preference, and cost limits.
+## Phase 2
+
+- Azure Kubernetes Service using the Free control-plane tier
+- AKS access to pull images from ACR
+
+## Commands
+
+```powershell
+$env:TF_VAR_subscription_id = az account show --query id -o tsv
+terraform init
+terraform fmt -check
+terraform validate
+terraform plan -out dailyops.tfplan
+```
+
+`terraform plan` previews changes. It does not create resources.
+
+Resource creation starts only after:
+
+```powershell
+terraform apply dailyops.tfplan
+```
+
+When the learning session is complete, remove billable resources with:
+
+```powershell
+terraform destroy
+```

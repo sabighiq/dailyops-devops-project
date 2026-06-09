@@ -5,3 +5,12 @@ npm-debug.log
 .env
 coverage
 dist
+
+# Terraform local state and generated files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+!*.tfvars.example
+crash.log

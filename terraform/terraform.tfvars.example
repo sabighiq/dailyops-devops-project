@@ -1,0 +1,3 @@
+location     = "centralindia"
+project_name = "dailyops"
+environment  = "learning"
