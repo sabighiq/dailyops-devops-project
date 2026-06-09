@@ -1,3 +1,5 @@
 location     = "centralindia"
 project_name = "dailyops"
 environment  = "learning"
+aks_node_vm_size = "Standard_D4s_v5"
+aks_node_count   = 1
