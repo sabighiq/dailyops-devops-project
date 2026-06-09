@@ -1,167 +1,148 @@
 # DailyOps DevOps Learning Guide
 
-This project is your hands-on path for learning a full DevOps CI/CD workflow.
-
-## Phase 1: Run the Application
-
-Goal: understand the app before deploying it.
-
-```powershell
-npm install
-npm test
-npm start
-```
-
-Open:
+## Completed Project Flow
 
 ```text
-http://localhost:3000
+Application
+-> Git and GitHub
+-> Docker
+-> Docker Hub
+-> Minikube
+-> Kubernetes self-healing
+-> Rolling updates
+-> Helm
+-> Prometheus and Grafana
+-> Jenkins CI/CD
+-> Terraform
+-> Azure Container Registry
+-> Azure Kubernetes Service
+-> Azure Load Balancer
+-> Monitoring on AKS
 ```
 
-Important endpoints:
+## Core Concepts
+
+### Application
+
+- Node.js and Express serve the frontend.
+- `/health` supports readiness and liveness probes.
+- `/metrics` exposes Prometheus metrics.
+- Tests run with `npm test`.
+
+### Git
 
 ```text
-http://localhost:3000/health
-http://localhost:3000/metrics
+Working directory -> staging area -> commit -> GitHub
 ```
 
-What to learn:
-
-- App runs on port `3000`.
-- `/health` is used by Kubernetes health checks.
-- `/metrics` is used by Prometheus.
-
-## Phase 2: Docker
-
-Goal: package the app as a container image.
+Common commands:
 
 ```powershell
-docker build -t dailyops:local .
-docker run -p 3000:3000 dailyops:local
+git status
+git add .
+git commit -m "message"
+git push
 ```
 
-What to learn:
+### Docker
 
-- `Dockerfile`
-- image build
-- container run
-- port mapping
-
-## Phase 3: Kubernetes with Minikube
-
-Goal: deploy the app to a local Kubernetes cluster.
+```text
+Dockerfile -> image -> running container -> registry
+```
 
 ```powershell
-minikube start
-kubectl apply -f k8s/
+docker build -t dailyops:v1 .
+docker run -d --name dailyops-container -p 8080:3000 dailyops:v1
+docker logs dailyops-container
+```
+
+### Kubernetes
+
+```text
+Deployment -> ReplicaSet -> Pods
+Service -> stable network endpoint
+```
+
+Important commands:
+
+```powershell
+kubectl get nodes
 kubectl get pods
-kubectl get svc
+kubectl get services
+kubectl describe deployment dailyops
+kubectl logs deployment/dailyops
+kubectl rollout status deployment/dailyops
+kubectl rollout undo deployment/dailyops
 ```
 
-What to learn:
+Deleting a pod demonstrates self-healing:
 
-- Deployment
-- Service
-- replicas
-- liveness probe
-- readiness probe
+```powershell
+kubectl delete pod <pod-name>
+kubectl get pods -w
+```
 
-## Phase 4: Helm
+### Helm
 
-Goal: deploy the app with reusable templates.
+Helm packages Kubernetes templates and configurable values.
 
 ```powershell
 helm upgrade --install dailyops ./helm/dailyops
 helm list
-kubectl get pods
+helm history dailyops
+helm rollback dailyops <revision>
 ```
 
-Change image tag:
+### Prometheus and Grafana
+
+Prometheus discovers DailyOps through `ServiceMonitor` and scrapes `/metrics`.
+
+Useful queries:
+
+```promql
+dailyops_up
+dailyops_uptime_seconds
+kube_pod_info{namespace="default"}
+```
+
+### Jenkins
+
+Poll SCM checks GitHub for new commits. Jenkins then:
+
+```text
+Tests -> image build -> ACR push -> Helm upgrade -> AKS rollout
+```
+
+The Jenkins build number becomes the immutable image tag.
+
+### Terraform and Azure
+
+Terraform manages:
+
+```text
+Resource Group
+ACR Basic registry
+AKS Free control-plane tier
+Single AKS system node
+Managed identity
+AcrPull assignment
+```
+
+Terraform workflow:
 
 ```powershell
-helm upgrade --install dailyops ./helm/dailyops --set image.tag=build-2
+$env:TF_VAR_subscription_id = az account show --query id -o tsv
+terraform init
+terraform fmt -check
+terraform validate
+terraform plan -out plan.tfplan
+terraform apply plan.tfplan
 ```
-
-What to learn:
-
-- `Chart.yaml`
-- `values.yaml`
-- Helm templates
-- release upgrade
-
-## Phase 5: Jenkins
-
-Goal: automate build, test, image push, and deployment.
-
-Pipeline stages in `Jenkinsfile`:
-
-```text
-Checkout Code
-Install Dependencies
-Run Tests
-Build Docker Image
-Push Docker Image
-Deploy to Kubernetes
-```
-
-Before running Jenkins pipeline, update:
-
-```text
-DOCKER_IMAGE = 'your-dockerhub-username/dailyops'
-```
-
-Also create Jenkins credential:
-
-```text
-dockerhub-creds
-```
-
-What to learn:
-
-- Jenkins pipeline syntax
-- credentials
-- build number as image tag
-- automated Helm deployment
-
-## Phase 6: Prometheus and Grafana
-
-Goal: monitor the Kubernetes app.
-
-Install monitoring stack:
-
-```powershell
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-helm upgrade --install monitoring prometheus-community/kube-prometheus-stack
-```
-
-What to learn:
-
-- Prometheus scraping
-- pod metrics
-- app metrics from `/metrics`
-- Grafana dashboards
-
-## Phase 7: Terraform and Cloud
-
-Goal: move from local Minikube to AWS EKS.
-
-Terraform will provision:
-
-```text
-ECR repository
-EKS cluster
-node group
-IAM roles
-networking
-```
-
-This should be done after you are comfortable with local Docker, Kubernetes, Helm, and Jenkins.
 
 ## Interview Explanation
 
-Use this explanation:
+> I built DailyOps, a Node.js productivity application, and implemented an end-to-end CI/CD platform. GitHub changes are detected by Jenkins, which runs tests, builds a versioned Docker image, pushes it to Azure Container Registry, and deploys it to Azure Kubernetes Service using Helm. Kubernetes provides health checks, self-healing, and rolling updates. Terraform provisions ACR, AKS, managed identity, and registry permissions. Prometheus scrapes application and cluster metrics, which are visualized in Grafana.
 
-```text
-I built DailyOps, a Node.js productivity dashboard, and deployed it using a complete DevOps CI/CD workflow. Jenkins runs tests, builds a Docker image, pushes it to a registry, and deploys it to Kubernetes using Helm. Kubernetes uses health checks for reliability, and Prometheus/Grafana monitor application and cluster metrics.
-```
+## Resume Bullet
+
+> Built an automated CI/CD pipeline using GitHub, Jenkins, Docker, Terraform, Azure Container Registry, AKS, Helm, Prometheus, and Grafana, including versioned image delivery, rolling deployments, self-healing, health probes, public load balancing, and application monitoring.
