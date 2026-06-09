@@ -3,7 +3,8 @@ pipeline {
 
   environment {
     APP_NAME = 'dailyops'
-    DOCKER_IMAGE = 'iquyan/dailyops'
+    ACR_LOGIN_SERVER = 'dailyopslearning5kd5hr.azurecr.io'
+    DOCKER_IMAGE = "${ACR_LOGIN_SERVER}/dailyops"
     IMAGE_TAG = "${BUILD_NUMBER}"
     KUBECONFIG = 'C:\\Users\\iquya\\.kube\\config'
   }
@@ -33,18 +34,19 @@ pipeline {
       }
     }
 
-    stage('Push Docker Image') {
+    stage('Push Image to Azure ACR') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          bat 'docker login -u "%DOCKER_USER%" -p "%DOCKER_PASS%"'
+        withCredentials([usernamePassword(credentialsId: 'azure-acr-creds', usernameVariable: 'ACR_CLIENT_ID', passwordVariable: 'ACR_CLIENT_SECRET')]) {
+          bat 'docker login %ACR_LOGIN_SERVER% -u "%ACR_CLIENT_ID%" -p "%ACR_CLIENT_SECRET%"'
           bat 'docker push %DOCKER_IMAGE%:%IMAGE_TAG%'
         }
       }
     }
 
-    stage('Deploy to Kubernetes') {
+    stage('Deploy to Azure AKS') {
       steps {
-        bat 'helm upgrade --install dailyops ./helm/dailyops --set image.repository=%DOCKER_IMAGE% --set image.tag=%IMAGE_TAG%'
+        bat 'helm upgrade --install dailyops ./helm/dailyops --set image.repository=%DOCKER_IMAGE% --set image.tag=%IMAGE_TAG% --set service.type=LoadBalancer --set serviceMonitor.enabled=false'
+        bat 'kubectl rollout status deployment/dailyops --timeout=180s'
       }
     }
   }
